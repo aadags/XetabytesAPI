@@ -15,10 +15,10 @@
 if ( isset($_FILES['uploadedfile']) and !empty($_FILES['uploadedfile']['tmp_name']) ) {
 
  $file  = $_FILES['uploadedfile']['tmp_name'];
- $handle    = fopen($file, "r");
- $data      = fread($handle, filesize($file));
+ $handle    = fopen($file, "rb"); //binary
+ $data      = base64_encode(fread($handle, filesize($file)));
 
- $key = 'private_key';   //your private key here
+ $key = 'private key';   //your private key here
  $dir = 'sub_directory';   //optional - sub folder in your cloud.
 
  $file_name = pathinfo($_FILES['uploadedfile']['name'],PATHINFO_BASENAME);
@@ -34,6 +34,7 @@ if ( isset($_FILES['uploadedfile']) and !empty($_FILES['uploadedfile']['tmp_name
  curl_setopt($curl, CURLOPT_URL, 'https://www.xetabytes.com/api/v1/upload');
  curl_setopt($curl, CURLOPT_POST, 1);
  curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+ curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
  curl_setopt($curl, CURLOPT_POSTFIELDS, $post_data);
  $response = curl_exec($curl);
  curl_close ($curl);
